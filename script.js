@@ -86,6 +86,14 @@ modalCancelBtn.addEventListener('click', () => {
     hideModal();
 });
 
+// --- Category Collapse/Expand ---
+function toggleCategory(event) {
+    const categoryGroup = event.currentTarget.closest('.category-group');
+    if (categoryGroup) {
+        categoryGroup.classList.toggle('collapsed');
+    }
+}
+
 
 // --- Tab Navigation ---
 inventoryTabBtn.addEventListener('click', () => {
@@ -154,6 +162,7 @@ function renderInventory() {
         const categoryTitleDiv = document.createElement('div');
         categoryTitleDiv.classList.add('category-title');
         categoryTitleDiv.textContent = getCategoryDisplayName(categoryKey);
+        categoryTitleDiv.addEventListener('click', toggleCategory); // Add event listener
         categoryGroupDiv.appendChild(categoryTitleDiv);
 
         groupedItems[categoryKey].sort((a, b) => a.name.localeCompare(b.name)).forEach(item => {
@@ -250,6 +259,7 @@ function renderShoppingList() {
         const categoryTitleDiv = document.createElement('div');
         categoryTitleDiv.classList.add('category-title');
         categoryTitleDiv.textContent = getCategoryDisplayName(categoryKey);
+        categoryTitleDiv.addEventListener('click', toggleCategory); // Add event listener
         categoryGroupDiv.appendChild(categoryTitleDiv);
 
         // Separate bought from unbought, sort unbought then bought
