@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras PWA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <nav class="tab-navigation">
+                <button id="inventory-tab" class="tab-button active">Inventário</button>
+                <button id="shopping-list-tab" class="tab-button">Lista de Compras</button>
+            </nav>
+        </header>
+
+        <main>
+            <section id="inventory-section" class="tab-content active">
+                <h2>Inventário</h2>
+                <div class="add-item-form">
+                    <input type="text" id="new-item-name" placeholder="Nome do item">
+                    <select id="new-item-category">
+                        <option value="">Selecionar Categoria</option>
+                        <option value="frescos">🍎 Frescos</option>
+                        <option value="frigorifico">❄️ Frigorífico</option>
+                        <option value="padaria">🥖 Padaria</option>
+                        <option value="talho-peixaria">🥩 Talho & Peixaria</option>
+                        <option value="despensa">🥫 Despensa</option>
+                        <option value="limpeza-higiene">🧼 Limpeza & Higiene</option>
+                        <option value="congelados">🧊 Congelados</option>
+                        <option value="outros">📦 Outros</option>
+                    </select>
+                    <button id="add-inventory-item-btn" class="action-button">+</button>
+                </div>
+                <div id="inventory-list" class="item-list">
+                    <!-- Inventory items will be rendered here -->
+                </div>
+            </section>
+
+            <section id="shopping-list-section" class="tab-content">
+                <h2>Lista de Compras</h2>
+                <div class="shopping-list-controls">
+                    <button id="uncheck-all-btn" class="action-button">-</button>
+                    <button id="clear-all-btn" class="action-button">x</button>
+                </div>
+                <div id="shopping-list" class="item-list">
+                    <!-- Shopping list items will be rendered here -->
+                </div>
+            </section>
+        </main>
+
+        <div id="modal-backdrop" class="modal-backdrop"></div>
+        <div id="custom-modal" class="custom-modal">
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button id="modal-confirm-btn" class="action-button confirm">Confirmar</button>
+                <button id="modal-cancel-btn" class="action-button cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered: ', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
