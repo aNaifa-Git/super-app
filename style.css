@@ -114,27 +114,26 @@ h2 {
 /* Add Item Form */
 .add-item-form {
     display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
     gap: 10px;
     margin-bottom: 20px;
 }
 
 .add-item-form input[type="text"],
-.add-item-form select {
-    flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #555;
-    border-radius: 8px;
-    background-color: #333;
-    color: var(--dark-text);
-    font-size: 1em;
-    -webkit-appearance: none; /* Remove default styling for select on iOS */
-    -moz-appearance: none; /* Remove default styling for select on Firefox */
-    appearance: none; /* Remove default styling for select */
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.4L146.2%20202.7%2018.8%2074.8a17.6%2017.6%200%200%00-25.3%2023.6l133.7%20133.7a17.6%2017.6%200%200%0025.3%200l133.7-133.7a17.6%2017.6%200%200%00-13-30.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
+.add-item-form select,
+.add-item-form .action-button {
+    flex-grow: 1; /* Allow them to grow */
+    width: 100%; /* Take full width when wrapped */
 }
+
+/* Override for the button to not grow to full width when all are on one line */
+@media (min-width: 400px) { /* Adjust breakpoint as needed */
+    .add-item-form .action-button {
+        width: auto;
+        flex-grow: 0;
+    }
+}
+
 
 .add-item-form input[type="text"]::placeholder,
 .add-item-form select option {
