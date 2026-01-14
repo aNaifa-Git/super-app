@@ -2,7 +2,7 @@
   "name": "Lista de Compras PWA",
   "short_name": "Compras",
   "description": "Uma aplicação PWA de Lista de Compras otimizada para telemóvel em Dark Mode.",
-  "start_url": ".",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
