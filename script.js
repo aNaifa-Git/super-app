@@ -3,9 +3,11 @@
 // --- Data Structures and Persistence ---
 const STORAGE_KEY_INVENTORY = 'shoppingListPWA_inventory';
 const STORAGE_KEY_SHOPPING_LIST = 'shoppingListPWA_shoppingList';
+const STORAGE_KEY_COLLAPSED = 'shoppingListPWA_collapsedCategories';
 
 let inventory = JSON.parse(localStorage.getItem(STORAGE_KEY_INVENTORY)) || [];
 let shoppingList = JSON.parse(localStorage.getItem(STORAGE_KEY_SHOPPING_LIST)) || [];
+let collapsedCategories = JSON.parse(localStorage.getItem(STORAGE_KEY_COLLAPSED)) || { inventory: [], shoppingList: [] };
 
 function saveInventory() {
     localStorage.setItem(STORAGE_KEY_INVENTORY, JSON.stringify(inventory));
@@ -13,6 +15,10 @@ function saveInventory() {
 
 function saveShoppingList() {
     localStorage.setItem(STORAGE_KEY_SHOPPING_LIST, JSON.stringify(shoppingList));
+}
+
+function saveCollapsedCategories() {
+    localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(collapsedCategories));
 }
 
 // Helper to get category display names and colors
@@ -89,9 +95,43 @@ modalCancelBtn.addEventListener('click', () => {
 // --- Category Collapse/Expand ---
 function toggleCategory(event) {
     const categoryGroup = event.currentTarget.closest('.category-group');
-    if (categoryGroup) {
-        categoryGroup.classList.toggle('collapsed');
+    if (!categoryGroup) return;
+
+    // 1. Determine the context (inventory vs. shopping list)
+    const listType = categoryGroup.closest('#inventory-list') ? 'inventory' : 'shoppingList';
+
+    // 2. Get the category key
+    let categoryKey = null;
+    categoryGroup.classList.forEach(className => {
+        if (className.startsWith('category-')) {
+            categoryKey = className.replace('category-', '');
+        }
+    });
+
+    if (!categoryKey) return;
+
+    // 3. Toggle visual state
+    const isCollapsing = !categoryGroup.classList.contains('collapsed');
+    categoryGroup.classList.toggle('collapsed');
+
+    // 4. Update the persistence object
+    const list = collapsedCategories[listType];
+    const index = list.indexOf(categoryKey);
+
+    if (isCollapsing) {
+        // Add to the list if it's not already there
+        if (index === -1) {
+            list.push(categoryKey);
+        }
+    } else {
+        // Remove from the list if it exists
+        if (index > -1) {
+            list.splice(index, 1);
+        }
     }
+
+    // 5. Save the updated state to localStorage
+    saveCollapsedCategories();
 }
 
 
@@ -158,6 +198,11 @@ function renderInventory() {
     Object.keys(groupedItems).sort().forEach(categoryKey => {
         const categoryGroupDiv = document.createElement('div');
         categoryGroupDiv.classList.add('category-group', `category-${categoryKey}`);
+
+        // Check if the category should be collapsed
+        if (collapsedCategories.inventory.includes(categoryKey)) {
+            categoryGroupDiv.classList.add('collapsed');
+        }
 
         const categoryTitleDiv = document.createElement('div');
         categoryTitleDiv.classList.add('category-title');
@@ -255,6 +300,11 @@ function renderShoppingList() {
     Object.keys(groupedItems).sort().forEach(categoryKey => {
         const categoryGroupDiv = document.createElement('div');
         categoryGroupDiv.classList.add('category-group', `category-${categoryKey}`);
+
+        // Check if the category should be collapsed
+        if (collapsedCategories.shoppingList.includes(categoryKey)) {
+            categoryGroupDiv.classList.add('collapsed');
+        }
 
         const categoryTitleDiv = document.createElement('div');
         categoryTitleDiv.classList.add('category-title');
